@@ -18,4 +18,5 @@ Implementação de um balanceador de carga para 3 servidores (1 TCP e 2 UDP) uti
 - python load_balancer.py
 
 O arquivo de config.py já vem com portas pré-configuradas, dependendo da disponibilidade dessas portas talvez seja necessário alterá-las.
+
 Os arquivos .bat para execução no windows podem não funcionar caso o python não esteja configurado corretamente no PATH. Se o seu python for executado com um nome diferente como "py" ou "python3", basta fazer a alteração nos arquivos.
