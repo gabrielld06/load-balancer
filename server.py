@@ -1,7 +1,11 @@
-import socket, errno, sys, config
+import socket, errno, sys, config, json
+from time import sleep
 
 TCP_PORT = config.TCP_SERVER_PORT
 UDP_PORTS = config.UDP_SERVER_PORTS
+
+def do_something(time : int):
+    sleep(time)
 
 class TCP_Socket():
     def __init__(self) -> None:
@@ -17,13 +21,17 @@ class TCP_Socket():
             clientsocket, address = self.sock.accept()
 
             print(f'Connection from {address} has been established')
-            
-            # clientsocket.send(bytes('Hello TCP Server', 'utf-8'))
-
-            # print(f'Message sent to {address}')
 
             message = clientsocket.recv(1024).decode('utf-8')
             print(f'Message from: {address}', f'Message: {message}', sep='\n')
+
+            data = json.loads(message)
+
+            do_something(data['time'])
+            
+            clientsocket.send(bytes(f'TCP Server slept for {data["time"]} seconds', 'utf-8'))
+
+            print(f'Message sent to {address}')
             
             clientsocket.close()
 
@@ -43,9 +51,18 @@ class UDP_Socket():
             bytesAddressPair = self.sock.recvfrom(1024)
 
             message = bytesAddressPair[0].decode('utf-8')
-            address = bytesAddressPair[1]
+
+            parsedMessage = json.loads(message)
+            data = parsedMessage['data']
+            address = (parsedMessage['address'], int(parsedMessage['port']))
 
             print(f'Message from: {address}', f'Message: {message}', sep='\n')
+
+            do_something(data['time'])
+
+            self.sock.sendto(str.encode(f'UDP Server slept for {data["time"]} seconds'), address)
+
+            print(f'Message sent to {address}')
 
 def Server(connection : str) -> TCP_Socket | UDP_Socket:
     try:

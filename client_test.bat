@@ -1,5 +1,5 @@
 :: Does one TCP connection and two UDP connections
-python client.py TCP
-python client.py UDP
-python client.py UDP
+start cmd.exe /k "python client.py TCP"
+start cmd.exe /k "python client.py UDP"
+start cmd.exe /k "python client.py UDP"
 pause
